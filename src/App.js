@@ -1,36 +1,22 @@
-import React, { useState } from 'react';
-import TodoList from './TodoList';
-import TodoForm from './TodoForm';
+import React, { useReducer } from "react";
+import TodoList from "./components/TodoList/TodoList";
+import NewTodoForm from "./components/NewTodoForm";
+import { todoReducer } from "./reducer";
+import "./styles/App.css";
+
+const initialState = [
+  { id: 1, text: "Find that missing sock", completed: false },
+  { id: 2, text: "Finish React project", completed: false },
+];
 
 const App = () => {
-  const [todos, setTodos] = useState([]);
-
-  const addTodo = (text) => {
-    const newTodo = {
-      id: Date.now(),
-      text,
-      completed: false,
-    };
-    setTodos([newTodo, ...todos]);
-  };
-
-  const toggleComplete = (id) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos);
-  };
-
-  const deleteTodo = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
-  };
+  const [todos, dispatch] = useReducer(todoReducer, initialState);
 
   return (
-    <div>
+    <div className="app">
       <h1>Todo List</h1>
-      <TodoForm addTodo={addTodo} />
-      <TodoList todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo} />
+      <NewTodoForm dispatch={dispatch} />
+      <TodoList todos={todos} dispatch={dispatch} />
     </div>
   );
 };
